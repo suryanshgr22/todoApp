@@ -3,9 +3,10 @@ const zod = require('zod');
 const {createTodo, updateTodo} = require('./types');
 const {Todo} = require('./db');
 const app = express();
+const cors = require('cors')
 
 
-
+app.use(cors());
 app.use(express.json());
 
 app.post('/todo',async (req,res)=>{
@@ -28,9 +29,10 @@ app.post('/todo',async (req,res)=>{
 })
 
 app.get('/todos',async (req,res)=>{
-    const todos = Todo.find({});
+    const todos = await Todo.find();
+    
     if(todos){
-        res.status(201).json({todos});
+        res.status(201).json({todos:todos});
         return;
     }else{
         res.status(501).json({msg:"Request failed"});
@@ -55,4 +57,4 @@ app.put('/completed', async (req,res)=>{
     }
 } )
 
-app.listen(3000)
+app.listen(3000);
